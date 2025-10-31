@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Murciélagos Volando</title>
+<style>
+  html, body {
+    margin: 0;
+    overflow: hidden;
+    height: 100%;
+    background: radial-gradient(circle at 50% 30%, #cfd6e0 0%, #3a4a5a 40%, #0b0b0b 100%);
+  }
+
+  /* Luna */
+  .moon {
+    position: absolute;
+    top: 80px;
+    right: 120px;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fffce8 0%, #ddd7c1 70%, #bbb49b 100%);
+    box-shadow: 0 0 60px 30px rgba(255, 255, 200, 0.3);
+  }
+
+  .bat {
+    position: absolute;
+    width: 50px;
+    height: 25px;
+    background: transparent;
+    transform-origin: center;
+    animation: fly var(--duracion) ease-in-out infinite;
+  }
+
+  /* Alas caricaturizadas */
+  .bat::before,
+  .bat::after {
+    content: "";
+    position: absolute;
+    top: 4px;
+    width: 25px;
+    height: 18px;
+    background: black;
+    border-radius: 0 0 80% 80% / 0 0 100% 100%;
+    transform-origin: bottom center;
+    box-shadow: inset 0 -2px 3px rgba(0,0,0,0.5);
+    animation: flap 0.35s ease-in-out infinite;
+    clip-path: polygon(0 100%, 15% 65%, 30% 85%, 45% 60%, 60% 80%, 75% 50%, 100% 100%);
+  }
+
+  .bat::before {
+    left: 0;
+  }
+
+  .bat::after {
+    right: 0;
+    transform: scaleX(-1);
+    animation-delay: 0.15s;
+  }
+
+  /* Aleteo más natural */
+  @keyframes flap {
+    0%, 100% { transform: rotate(20deg) scaleY(0.9); }
+    50% { transform: rotate(70deg) scaleY(1.05); }
+  }
+
+  /* Vuelo suave y curvo */
+  @keyframes fly {
+    0% {
+      transform: translate(var(--x-start), var(--y-start)) scale(var(--escala)) rotate(0deg);
+      opacity: 0.8;
+    }
+    25% {
+      transform: translate(calc(var(--x-start) + var(--curveX)), calc(var(--y-start) - var(--curveY))) scale(var(--escala)) rotate(10deg);
+      opacity: 1;
+    }
+    50% {
+      transform: translate(calc(var(--x-start) + var(--x-delta)), calc(var(--y-start) + var(--y-delta))) scale(calc(var(--escala) * 1.05)) rotate(-5deg);
+    }
+    75% {
+      transform: translate(calc(var(--x-start) + var(--curveX) * -1), calc(var(--y-start) + var(--curveY))) scale(var(--escala)) rotate(8deg);
+      opacity: 0.9;
+    }
+    100% {
+      transform: translate(var(--x-end), var(--y-end)) scale(var(--escala)) rotate(0deg);
+      opacity: 0.8;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="moon"></div>
+<script>
+  const numMurcielagos = 25;
+
+  for (let i = 0; i < numMurcielagos; i++) {
+    const bat = document.createElement('div');
+    bat.classList.add('bat');
+
+    const xStart = Math.random() * window.innerWidth;
+    const yStart = Math.random() * window.innerHeight;
+    const xEnd = Math.random() * window.innerWidth;
+    const yEnd = Math.random() * window.innerHeight;
+    const xDelta = (Math.random() - 0.5) * 400;
+    const yDelta = (Math.random() - 0.5) * 200;
+    const curveX = (Math.random() - 0.5) * 200;
+    const curveY = (Math.random() - 0.5) * 150;
+    const duracion = 6 + Math.random() * 6;
+    const escala = 0.6 + Math.random() * 0.8;
+
+    bat.style.setProperty('--x-start', `${xStart}px`);
+    bat.style.setProperty('--y-start', `${yStart}px`);
+    bat.style.setProperty('--x-end', `${xEnd}px`);
+    bat.style.setProperty('--y-end', `${yEnd}px`);
+    bat.style.setProperty('--x-delta', `${xDelta}px`);
+    bat.style.setProperty('--y-delta', `${yDelta}px`);
+    bat.style.setProperty('--curveX', `${curveX}px`);
+    bat.style.setProperty('--curveY', `${curveY}px`);
+    bat.style.setProperty('--duracion', `${duracion}s`);
+    bat.style.setProperty('--escala', escala);
+
+    document.body.appendChild(bat);
+  }
+</script>
+</body>
+</html>
